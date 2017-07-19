@@ -1,0 +1,13 @@
+version: '3.1'
+
+services:
+
+  gitolite:
+    image: erwin82/gitolite-unpriv:latest
+    ports:
+      - 2222:2222
+    environment:
+      SSH_KEY: "${SSH_KEY}"
+    volumes:
+      - ${SSH_VOLUME}:/ssh-in
+      - ${REPOS_VOLUME}:/home/git/repositories
