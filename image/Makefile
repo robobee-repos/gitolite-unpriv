@@ -1,6 +1,6 @@
 REPOSITORY := erwin82
 NAME := gitolite
-VERSION ?= v3.6.6-r1-1
+VERSION ?= v3.6.7-r1-1
 
 build: _build ##@targets Builds the docker image.
 

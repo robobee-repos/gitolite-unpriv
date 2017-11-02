@@ -36,7 +36,7 @@ RUN set +x \
   && cd /home/git \
   && su git -c "git clone https://github.com/sitaramc/gitolite.git" \
   && cd /home/git/gitolite \
-  && su git -c "git checkout v3.6.6" \
+  && su git -c "git checkout v3.6.7" \
   && cd /home/git \
   && su git -c "gitolite/install -ln" \
 # http://stackoverflow.com/questions/22547939/docker-gitlab-container-ssh-git-login-error
