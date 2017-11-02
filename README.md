@@ -5,6 +5,12 @@
 Modifies the Dockerfile from [elsdoerfer/gitolite](https://hub.docker.com/r/elsdoerfer/gitolite/)
 to run Gitolite and Sshd as an unprivileged user on port 2222.
 
+## Environment
+
+| Variable | Description |
+| ---- | ----- |
+| `SSH_KEY`  | Ssh public key to access the gitolite-admin repository. |
+
 ## Exposed Ports
 
 | Port | Description |

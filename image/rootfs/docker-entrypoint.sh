@@ -1,41 +1,18 @@
 #!/bin/bash
-set -xe
-
-function check_files_exists() {
-  ls $1 1> /dev/null 2>&1
-}
-
-function copy_file() {
-  file="$1"; shift
-  dir="$1"; shift
-  mod="$1"; shift
-  if [ -e "$file" ]; then
-    cp "$file" $dir/"$file"
-    chmod $mod $dir/"$file"
-  fi
-}
-
-function copy_sshd() {
-  dir="/ssh-in"
-  if [ ! -d "${dir}" ]; then
-    return
-  fi
-  cd "${dir}"
-  if check_files_exists "ssh_host_*"; then
-    rsync -u -v ssh_host_* /etc/ssh/
-  fi
-  if check_files_exists "sshd_config"; then
-    rsync -u -v sshd_config /etc/ssh/
-  fi
-}
+set -e
 
 function patch_sshd() {
   sed -i -e "s/UsePrivilegeSeparation yes/UsePrivilegeSeparation no/" /etc/ssh/sshd_config
-  sed -i -e "s/Port 22/Port ${SSH_PORT}/" /etc/ssh/sshd_config
+  sed -i -r -e "s/^#?Port ([[:digit:]]+)/Port ${SSH_PORT}/" /etc/ssh/sshd_config
 }
 
+source /docker-entrypoint-utils.sh
+set_debug
 echo "Running as `id`"
-copy_sshd
+copy_files "/ssh-in" "/etc/ssh" "ssh_host_*"
+copy_files "/ssh-in" "/etc/ssh" "sshd_config"
+sync_dir "/home/git.dist" "/home/git"
 patch_sshd
+mkdir -p "${GIT_ROOT}"
 cd "${GIT_ROOT}"
 exec /init.sh "$@"

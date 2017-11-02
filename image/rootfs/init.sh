@@ -1,14 +1,8 @@
 #!/bin/bash
 set -ex
 
-function backup_sshd() {
-  dir="/ssh-in"
-  if [ ! -d "${dir}" ]; then
-    return
-  fi
-  cd "${dir}"
-  rsync -u -v /etc/ssh/ssh_host_* ./
-}
+source /docker-entrypoint-utils.sh
+set_debug
 
 # First, make sure we have a host key; there are multiple host key
 # files, we just check that one of them exists.
@@ -22,7 +16,6 @@ if [ ! -e /etc/ssh/ssh_host_rsa_key ]; then
     echo "No SSH host keys available. Generating..."
     export LC_ALL=C
     export DEBIAN_FRONTEND=noninteractive
-    ssh-keygen -f /etc/ssh/ssh_host_key -N '' -t rsa1
     ssh-keygen -f /etc/ssh/ssh_host_rsa_key -N '' -t rsa
     ssh-keygen -f /etc/ssh/ssh_host_dsa_key -N '' -t dsa
     ssh-keygen -f /etc/ssh/ssh_host_ecdsa_key -N '' -t ecdsa
@@ -35,8 +28,8 @@ cd /home/git
 
 # If .ssh has been mounted, ensure it has the right permissions
 if [ -d ./.ssh ]; then
-   chown -R git:git ./.ssh
-
+   #chown -R git:git ./.ssh
+   echo ""
 else
   CLIENT_DIR="/home/git/repositories/.ssh/client"
   # .ssh does not exist; As an alternative, we allow the .ssh/client
@@ -44,7 +37,7 @@ else
   if [ -d "$CLIENT_DIR" ]; then
     echo "Copying files from $CLIENT_DIR to /home/git/.ssh"
     cp -pr $CLIENT_DIR ./.ssh
-    chown -R git:git ./.ssh
+    #chown -R git:git ./.ssh
   fi
 fi
 
@@ -54,6 +47,14 @@ if [ ! -f ./.ssh/id_rsa ]; then
    ssh-keygen -f /home/git/.ssh/id_rsa  -t rsa -N ''
    echo "Here is the public key of the container's 'git' user:"
    cat /home/git/.ssh/id_rsa.pub
+fi
+
+# Support trusting hosts for mirroring setups.
+if [ ! -f ./.ssh/known_hosts ]; then
+    if [ -n "$TRUST_HOSTS" ]; then
+        echo "Generating known_hosts file with $TRUST_HOSTS"
+        ssh-keyscan -H $TRUST_HOSTS > /home/git/.ssh/known_hosts
+    fi
 fi
 
 # Support trusting hosts for mirroring setups.
@@ -126,6 +127,5 @@ if [ "${1}" = 'sshd' ]; then
   set -- /usr/sbin/sshd -D
 fi
 
-backup_sshd
 echo "Executing $*"
 exec $*
