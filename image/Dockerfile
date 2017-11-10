@@ -17,11 +17,10 @@ RUN set -x \
 RUN set -x \
   && DEBIAN_FRONTEND=noninteractive \
   && apt-get update \
-  && apt-get install -y \
+  && apt-get install -y --no-install-recommends \
+    ca-certificates \
     sudo openssh-server git rsync locales \
-  && rm -rf /var/lib/apt/lists/*
-
-RUN set +x \
+  && rm -rf /var/lib/apt/lists/* \
   && locale-gen en_US.UTF-8 \
   && dpkg-reconfigure locales
 

@@ -39,6 +39,5 @@ $(ADMIN_KEY):
 
 $(GIT_VOLUME):
 	sudo mkdir -p $@
-	sudo chown root.108 -R $@
-	sudo chmod u=rwX,g=rwX,o= -R $@
+	sudo chmod o+rwX $@
 

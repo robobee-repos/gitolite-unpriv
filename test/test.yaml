@@ -3,7 +3,7 @@ version: '3.1'
 services:
 
   gitolite:
-    image: erwin82/gitolite:latest
+    image: robobeerun/gitolite:latest
     ports:
       - 2222:2222
     environment:
