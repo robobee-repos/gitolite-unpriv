@@ -1,9 +1,8 @@
-# Gitolite-Unpriv
+# Gitolite
 
 ## Description
 
-Modifies the Dockerfile from [elsdoerfer/gitolite](https://hub.docker.com/r/elsdoerfer/gitolite/)
-to run Gitolite and Sshd as an unprivileged user on port 2222.
+Modifies the Dockerfile from [elsdoerfer/gitolite](https://hub.docker.com/r/elsdoerfer/gitolite/) to run Gitolite and Sshd as an unprivileged user on port 2222.
 
 ## Environment
 
@@ -31,9 +30,7 @@ to run Gitolite and Sshd as an unprivileged user on port 2222.
 
 ## Test
 
-The docker-compose file `test.yaml` can be used to startup the container.
-The installation can be then accessed
-from `localhost:2222`.
+The docker-compose file `test.yaml` can be used to startup the container. The installation can be then accessed from `localhost:2222`.
 
 ```
 cd test
@@ -43,6 +40,8 @@ make test
 ## License
 
 gitolite is published under the [GPL v2](http://gitolite.com/gitolite/index.html#license)
+
+This image is licensed under the [MIT](https://opensource.org/licenses/MIT) license.
 
 Copyright 2017 Erwin Müller
 
